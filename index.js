@@ -1,25 +1,60 @@
 let express = require("express");
+let bodyParser = require("body-parser");
 
 const app = express();
+app.use(bodyParser.json());
 
 app.use(express.static('public'));
 
 let users = require("./state").users;
 
-app.use(function(request,response,next){
-    
-    if(request.path === "/users"){
-        return response.send(users);
-    }else if(request.path === "/users/1"){
-        return response.send(users[0]);
-    }else{
-        return response.send("Blah Blah BLah")
-    }
+app.get("/users/:userId",function (req,res,next){
+    res.json(users[request.params.userId]);
+   });
+   
 
+app.post("/users",function(req,res){
+    users.push(req.body);
+   console.log(req);
+ })
+ 
+app.get("/users", function(req, res, next)
+{
+    return res.json(users);
+});
+
+app.get("/users/1", function(req, res, next)
+{
+    return res.json(users[0]);
+});
+
+app.post("/users", function(req, res, next)
+{
+    users.push({
+        _id: 6,
+        name: "Rene",
+        occupation: "Driver"
+    })
+    return res.json(users[users.length-1]);
+});
+
+app.put("/users/1", function(req, res, next)
+{
+    users[0].name = "Ted";
+    return res.json(users[0]);
+});
+app.delete("/users/1", function(req, res, next)
+{
+    users.splice(0,1)
+    return res.send("Deleted!");
+});
+
+app.use(function(req, res, next)
+{
+    return res.send("Blah Blah Blah");
 });
 
  
-
 
 
 
