@@ -7,16 +7,34 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 
 let users = require("./state").users;
+let counter = 10;
 
+//Part 4-1
 app.get("/users/:userId",function (req,res,next){
-    res.json(users[request.params.userId]);
-   });
-   
+    res.json(users[req.params.userId]);
+});
 
-app.post("/users",function(req,res){
+//Part 4-2
+app.put('/users/:userId', (req, res, next) => {
+    users[req.params.userId].occupation = "Stay at home Astronaut";
+
+    res.json(users[req.params.userId]);
+});  
+
+//Part 4-3
+app.delete('/users/:userId', (req, res, next) => {
+    users[req.params.userId]["isActive"] = false;
+    return res.send("deleted");
+});
+   
+//Part 3
+app.post("/users",function(req,res, next){
+
     users.push(req.body);
-   console.log(req);
- })
+    users[users.length-1]._id = counter ++;  
+    console.log(req);
+    return res.json(users[users.length-1]);
+ });
  
 app.get("/users", function(req, res, next)
 {
